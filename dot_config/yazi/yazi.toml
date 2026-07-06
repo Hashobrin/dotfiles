@@ -1,0 +1,8 @@
+[mgr]
+ratio    = [3, 8, 10]
+linemode = "size_and_mtime"
+
+[opener]
+edit = [
+  { run = 'nvim "$@"', block = true },
+]
