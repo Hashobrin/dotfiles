@@ -7,6 +7,18 @@ config.use_ime = true
 -- Blur is handled by Hyprland (see ~/.config/hypr/custom/rules.conf)
 config.window_background_opacity = 0.85
 
+-- WindowsではWSLをデフォルトのシェルにする
+if wezterm.target_triple:find("windows") then
+  local wsl_domains = wezterm.default_wsl_domains()
+  for _, domain in ipairs(wsl_domains) do
+    domain.default_cwd = "~"
+  end
+  if #wsl_domains > 0 then
+    config.wsl_domains = wsl_domains
+    config.default_domain = wsl_domains[1].name
+  end
+end
+
 ----------------------------------------------------
 -- Tab
 ----------------------------------------------------
@@ -15,7 +27,7 @@ config.window_decorations = "RESIZE"
 -- タブバーの表示
 config.show_tabs_in_tab_bar = true
 -- タブが一つの時は非表示
-config.hide_tab_bar_if_only_one_tab = true
+config.hide_tab_bar_if_only_one_tab = false
 -- falseにするとタブバーの透過が効かなくなる
 -- config.use_fancy_tab_bar = false
 

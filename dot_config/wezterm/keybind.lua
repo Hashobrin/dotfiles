@@ -3,11 +3,11 @@ local act = wezterm.action
 
 -- Show IME state and active key table in the status area
 wezterm.on("update-right-status", function(window, pane)
-  -- fcitx5-remote: 1=EN, 2=JP
-  local ime = "EN"
-  local ok, stdout = wezterm.run_child_process({ "fcitx5-remote" })
-  if ok and stdout:gsub("%s+", "") == "2" then
-    ime = "JP"
+  -- fcitx5-remote: 1=EN, 2=JP (Linux only; nil where fcitx5-remote is unavailable)
+  local ime = nil
+  local spawned, ok, stdout = pcall(wezterm.run_child_process, { "fcitx5-remote" })
+  if spawned then
+    ime = (ok and stdout:gsub("%s+", "") == "2") and "JP" or "EN"
   end
 
   local name = window:active_key_table()
@@ -22,8 +22,10 @@ wezterm.on("update-right-status", function(window, pane)
     table.insert(items, { Foreground = { Color = "#e0af68" } })
     table.insert(items, { Text = " " .. name .. " " })
   end
-  table.insert(items, { Foreground = { Color = ime == "JP" and "#ff9e64" or "#7aa2f7" } })
-  table.insert(items, { Text = " " .. ime .. " " })
+  if ime then
+    table.insert(items, { Foreground = { Color = ime == "JP" and "#ff9e64" or "#7aa2f7" } })
+    table.insert(items, { Text = " " .. ime .. " " })
+  end
 
   window:set_right_status(wezterm.format(items))
 end)

@@ -1,4 +1,4 @@
-[[manager.prepend_keymap]]
+[[mgr.prepend_keymap]]
 on = "e"
 run = "open --opener edit"
 desc = "Open in nvim"
